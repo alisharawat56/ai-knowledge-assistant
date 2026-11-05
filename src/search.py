@@ -1,3 +1,4 @@
+
 import json
 import math
 import os
@@ -19,29 +20,26 @@ OLLAMA_BASE_URL = os.getenv(
 EMBEDDING_MODEL = "nomic-embed-text"
 
 TOP_K = 5
+
+# This is an experimental starting threshold.
+# Calibrate it using your relevant and unrelated test questions.
 MIN_SIMILARITY = 0.60
 
 
 def generate_embedding(text):
-    """Convert a question into an embedding."""
-
     response = requests.post(
         f"{OLLAMA_BASE_URL}/api/embeddings",
         json={
             "model": EMBEDDING_MODEL,
-            "prompt": "search_document: " + text
+            "prompt": "search_query: " + text
         },
         timeout=120
     )
-
     response.raise_for_status()
-
     return response.json()["embedding"]
 
 
 def cosine_similarity(vector_a, vector_b):
-    """Calculate how similar two vectors are."""
-
     dot_product = sum(
         a * b for a, b in zip(vector_a, vector_b)
     )
@@ -55,22 +53,26 @@ def cosine_similarity(vector_a, vector_b):
     return dot_product / (magnitude_a * magnitude_b)
 
 
-def search_documents(question):
+def retrieve_documents(question):
+    """Return relevant document chunks, ranked by similarity."""
+
     if not DATABASE_FILE.exists():
-        print("Vector database not found.")
-        print("Run python -m src.build_vector_store first.")
-        return
+        raise FileNotFoundError(
+            "Knowledge database not found. "
+            "Run: python -m src.build_vector_store"
+        )
 
     question_embedding = generate_embedding(question)
 
     connection = sqlite3.connect(DATABASE_FILE)
     connection.row_factory = sqlite3.Row
 
-    rows = connection.execute(
-        "SELECT * FROM chunks"
-    ).fetchall()
-
-    connection.close()
+    try:
+        rows = connection.execute(
+            "SELECT * FROM chunks"
+        ).fetchall()
+    finally:
+        connection.close()
 
     results = []
 
@@ -92,45 +94,54 @@ def search_documents(question):
         })
 
     results.sort(
-        key=lambda result: result["score"],
+        key=lambda item: item["score"],
         reverse=True
     )
 
-    print(f"\nQuestion: {question}")
-    print("\nMost relevant passages:\n")
-
+    # Only return chunks above the relevance threshold.
     matches = [
-        result for result in results
-        if result["score"] >= MIN_SIMILARITY
+        item for item in results
+        if item["score"] >= MIN_SIMILARITY
     ][:TOP_K]
 
+    return matches, results
+
+
+def search_documents(question):
+    """Keep the Day 3 search command available."""
+
+    matches, all_results = retrieve_documents(question)
+
+    print(f"\nQuestion: {question}")
+
     if not matches:
-        print("No strong matches found in your documents.")
-        if results:
+        print("\nNo strong matches found.")
+        if all_results:
             print(
-                f"Closest similarity score: "
-                f"{results[0]['score']:.3f}"
+                "Closest similarity score: "
+                f"{all_results[0]['score']:.3f}"
             )
         return
 
+    print("\nMost relevant passages:\n")
+
     for number, result in enumerate(matches, start=1):
         print("=" * 70)
-        print(f"Result {number}")
+        print(f"Result: {number}")
         print(f"Similarity: {result['score']:.3f}")
         print(f"Source ID: {result['chunk_id']}")
         print(f"Document: {result['document_name']}")
         print(f"Title: {result['title']}")
-        print(f"Source URL: {result['source_url']}")
+        print(f"URL: {result['source_url']}")
         print("\nPassage:")
         print(result["text"])
-        print()
 
 
 if __name__ == "__main__":
-    user_question = input("Enter your question: ").strip()
+    question = input("Enter your question: ").strip()
 
-    if user_question:
+    if question:
         try:
-            search_documents(user_question)
+            search_documents(question)
         except requests.RequestException as error:
             print(f"Could not contact Ollama: {error}")
