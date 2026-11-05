@@ -224,3 +224,8 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+
+data/processed/knowledge.db
+data/processed/knowledge.db-shm
+data/processed/knowledge.db-wal
