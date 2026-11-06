@@ -54,6 +54,14 @@ Rules:
 4. Cite evidence using its source label, such as [S1].
 5. Put citations next to the claims they support.
 6. Write a clear, direct answer.
+7. Every factual claim must be supported by a provided passage.
+8. Do not introduce examples, comparisons, or facts from outside
+   the provided evidence.
+9. If only part of the question is answered by the evidence,
+   answer only that part and clearly identify the limitation.
+10. Do not cite a source unless its passage supports the claim.
+11. Before responding, check that the answer is consistent
+    with the provided evidence.
 
 USER QUESTION:
 {question}

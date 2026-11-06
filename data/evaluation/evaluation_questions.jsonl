@@ -1,0 +1,26 @@
+
+{"id":"Q01","question":"How does Python perform floor division?","answerable":true,"expected_source":"python_introduction.md","expected_terms":["floor division","//"]}
+{"id":"Q02","question":"How can I calculate powers in Python?","answerable":true,"expected_source":"python_introduction.md","expected_terms":["**","powers"]}
+{"id":"Q03","question":"What is the difference between / and // in Python?","answerable":true,"expected_source":"python_introduction.md","expected_terms":["classic division","floor division"]}
+{"id":"Q04","question":"How do I use a list in Python?","answerable":true,"expected_source":"python_introduction.md","expected_terms":["list","elements"]}
+{"id":"Q05","question":"How does Python handle if, elif, and else statements?","answerable":true,"expected_source":"control_flow.md","expected_terms":["if","elif","else"]}
+{"id":"Q06","question":"How can I loop over a sequence of numbers in Python?","answerable":true,"expected_source":"control_flow.md","expected_terms":["range","for"]}
+{"id":"Q07","question":"How can I stop a loop early in Python?","answerable":true,"expected_source":"control_flow.md","expected_terms":["break"]}
+{"id":"Q08","question":"How can I add an item to the end of a Python list?","answerable":true,"expected_source":"data_structures.md","expected_terms":["append"]}
+{"id":"Q09","question":"How do I remove an item from a Python list?","answerable":true,"expected_source":"data_structures.md","expected_terms":["remove","pop"]}
+{"id":"Q10","question":"What is a Python tuple?","answerable":true,"expected_source":"data_structures.md","expected_terms":["tuple","immutable"]}
+{"id":"Q11","question":"How do I create a set in Python, and what is it useful for?","answerable":true,"expected_source":"data_structures.md","expected_terms":["set","unique"]}
+{"id":"Q12","question":"How can I import a module in Python?","answerable":true,"expected_source":"modules.md","expected_terms":["import"]}
+{"id":"Q13","question":"How do I format strings using f-strings?","answerable":true,"expected_source":"input_output.md","expected_terms":["f-string","formatted string"]}
+{"id":"Q14","question":"How can I read the contents of a file in Python?","answerable":true,"expected_source":"input_output.md","expected_terms":["open","read"]}
+{"id":"Q15","question":"How can I handle an exception in Python?","answerable":true,"expected_source":"errors_exceptions.md","expected_terms":["try","except"]}
+{"id":"Q16","question":"What does the finally clause do in Python?","answerable":true,"expected_source":"errors_exceptions.md","expected_terms":["finally"]}
+{"id":"Q17","question":"How do I define a class in Python?","answerable":true,"expected_source":"classes.md","expected_terms":["class","class definition"]}
+{"id":"Q18","question":"How does inheritance work in Python classes?","answerable":true,"expected_source":"classes.md","expected_terms":["inheritance","derived class"]}
+{"id":"Q19","question":"How can I use the math module in Python?","answerable":true,"expected_source":"standard_library.md","expected_terms":["math","module"]}
+{"id":"Q20","question":"How do I create a virtual environment for a Python project?","answerable":true,"expected_source":"virtual_environments.md","expected_terms":["venv","virtual environment"]}
+{"id":"Q21","question":"How do I bake sourdough bread?","answerable":false,"expected_source":"","expected_terms":[]}
+{"id":"Q22","question":"Who won the 2024 Olympic basketball final?","answerable":false,"expected_source":"","expected_terms":[]}
+{"id":"Q23","question":"What is the current stock price of Microsoft?","answerable":false,"expected_source":"","expected_terms":[]}
+{"id":"Q24","question":"What is the capital of Japan?","answerable":false,"expected_source":"","expected_terms":[]}
+{"id":"Q25","question":"How do I repair a leaking kitchen faucet?","answerable":false,"expected_source":"","expected_terms":[]}
