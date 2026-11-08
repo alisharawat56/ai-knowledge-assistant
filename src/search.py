@@ -8,6 +8,9 @@ from pathlib import Path
 import requests
 from dotenv import load_dotenv
 
+
+from src.config import DATABASE_PATH
+
 load_dotenv()
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -55,7 +58,10 @@ def cosine_similarity(vector_a, vector_b):
 
 def retrieve_documents(question):
     """Return relevant document chunks, ranked by similarity."""
-
+    
+    if not DATABASE_PATH.exists():
+        raise FileNotFoundError("Knowledge database not found.")
+    
     if not DATABASE_FILE.exists():
         raise FileNotFoundError(
             "Knowledge database not found. "
@@ -63,6 +69,7 @@ def retrieve_documents(question):
         )
 
     question_embedding = generate_embedding(question)
+
 
     connection = sqlite3.connect(DATABASE_FILE)
     connection.row_factory = sqlite3.Row

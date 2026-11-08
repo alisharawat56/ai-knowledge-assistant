@@ -1,71 +1,38 @@
-
-import os
-import json
-import requests
-from dotenv import load_dotenv
-
-load_dotenv()
-
-BASE_URL = os.getenv(
-    "OLLAMA_BASE_URL",
-    "http://localhost:11434"
-)
-
-MODEL = os.getenv("OLLAMA_MODEL", "qwen3.5:0.8b")
+from src.qa import answer_question
 
 
-def answer_question(question):
+def main():
+    print("=" * 60)
+    print("AI KNOWLEDGE ASSISTANT")
+    print("=" * 60)
 
-    sources = [
-        {
-            "title": "Sample University Policy",
-            "url": "https://example.com/policy",
-            "passage": "University policies provide guidelines for students."
-        }
-    ]
+    while True:
+        question = input("\nYour question: ").strip()
 
-    try:
-        response = requests.post(
-            f"{BASE_URL}/api/chat",
-            json={
-                "model": MODEL,
-                "messages": [
-                    {"role": "user", "content": question}
-                ],
-                "stream": False
-            },
-            timeout=120
-        )
+        if question.lower() in {"exit", "quit"}:
+            print("Goodbye!")
+            break
 
-        response.raise_for_status()
+        result = answer_question(question)
 
-        data = response.json()
-        answer = data["message"]["content"]
+        print("\n" + "=" * 60)
+        print("ANSWER")
+        print("=" * 60)
+        print(result["answer"])
 
-        return {
-            "answer": answer,
-            "sources": sources,
-            "error": None
-        }
+        if result["sources"]:
+            print("\nSOURCE REFERENCES")
 
-    except requests.exceptions.RequestException as e:
-        return {
-            "answer": "Unable to generate an answer.",
-            "sources": [],
-            "error": str(e)
-        }
+            for source in result["sources"]:
+                print(f"\n[{source['source_label']}]")
+                print(f"Document: {source['document_name']}")
+                print(f"Title: {source['title']}")
+                print(f"Source ID: {source['chunk_id']}")
+                print(f"URL: {source['source_url']}")
 
-    except (ValueError, KeyError) as e:
-        return {
-            "answer": "Unable to process the model response.",
-            "sources": [],
-            "error": str(e)
-        }
+        if result["error"]:
+            print(f"\nError: {result['error']}")
 
 
 if __name__ == "__main__":
-    question = input("Ask your question: ")
-    result = answer_question(question)
-
-    print("\n--- AI KNOWLEDGE ASSISTANT ---")
-    print(json.dumps(result, indent=4))
+    main()
