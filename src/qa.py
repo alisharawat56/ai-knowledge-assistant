@@ -43,7 +43,8 @@ def answer_question(question):
                 "chunk_id": chunk.get("chunk_id"),
                 "document_name": chunk.get("document_name"),
                 "title": chunk.get("title"),
-                "source_url": chunk.get("source_url")
+                "source_url": chunk.get("source_url"),
+                "text": chunk.get("text", "")
             })
 
         prompt = f"""
