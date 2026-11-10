@@ -71,7 +71,6 @@ if ask_button:
 # -------------------------------------------------
 
 if "qa_result" in st.session_state:
-
     result = st.session_state["qa_result"]
 
     st.divider()
@@ -82,64 +81,42 @@ if "qa_result" in st.session_state:
     st.subheader("Answer")
 
     if result.get("error"):
+        st.error(result.get("answer", "Something went wrong."))
 
-        st.error(
-            result.get(
-                "answer",
-                "Something went wrong while processing your question."
-            )
-        )
-
-    elif not result.get("sources"):
-
-        st.info(
-            "I don't have enough evidence in the available documents "
-            "to answer this question. Try asking something related "
-            "to Python documentation."
-        )
-
-        st.write(result.get("answer", ""))
+    elif result.get("insufficient_evidence", False):
+        st.warning(result.get("answer", "Not enough evidence to answer."))
 
     else:
+        st.success("Response validated.")
+        st.write(result["answer"])
 
-        st.success("Answer generated using retrieved documentation.")
+    limitations = result.get("limitations", [])
 
-        st.write(result.get("answer", ""))
-
-    # ---------------------------------------------
-    # Expandable source passages
-    # ---------------------------------------------
+    if limitations:
+        with st.expander("Response limitations"):
+            for limitation in limitations:
+                st.write(f"- {limitation}")
 
     sources = result.get("sources", [])
 
     if sources:
-
         st.divider()
-        st.subheader("Retrieved Sources")
+        st.subheader("Verified Retrieved Sources")
 
         for source in sources:
+            label = source["source_label"]
+            document = source["document_name"]
+            title = source["title"]
 
-            label = source.get("source_label", "Source")
-            document = source.get("document_name", "Unknown document")
-            title = source.get("title", "Untitled")
+            with st.expander(f"{label} — {title} ({document})"):
+                st.markdown(f"**Document:** {document}")
+                st.markdown(f"**Title:** {title}")
+                st.markdown("**Retrieved passage:**")
+                st.write(source["text"])
 
-            with st.expander(
-                f"{label} — {title} ({document})"
-            ):
+                st.caption(f"Chunk ID: {source['chunk_id']}")
 
-                st.markdown("**Document:** " + document)
-
-                st.markdown("**Title:** " + title)
-
-                st.markdown("**Passage:**")
-
-                st.write(source.get("text", "No passage available."))
-
-                st.caption(
-                    "Chunk ID: " + str(source.get("chunk_id", "Unknown"))
-                )
-
-                source_url = source.get("source_url")
-
-                if source_url:
-                    st.markdown(f"[Open original document]({source_url})")
+                if source.get("source_url"):
+                    st.markdown(
+                        f"[Open original document]({source['source_url']})"
+                    )

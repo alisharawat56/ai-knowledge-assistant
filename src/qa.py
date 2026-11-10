@@ -1,5 +1,6 @@
 from src.search import retrieve_documents
 from src.ollama_client import generate_response
+from src.response_schema import validate_response
 
 
 def answer_question(question):
@@ -41,8 +42,8 @@ def answer_question(question):
             sources.append({
                 "source_label": source_label,
                 "chunk_id": chunk.get("chunk_id"),
-                "document_name": chunk.get("document_name"),
-                "title": chunk.get("title"),
+                "document_name": chunk.get("document_name", "Unknown document"),
+                "title": chunk.get("title", "Untitled"),
                 "source_url": chunk.get("source_url"),
                 "text": chunk.get("text", "")
             })
@@ -50,15 +51,15 @@ def answer_question(question):
         prompt = f"""
 You are a knowledge assistant.
 
-Answer the question using ONLY the evidence below.
+Answer the user's question using only the supplied evidence.
 
 Rules:
-1. Every factual claim must be supported by the passages.
-2. Do not introduce outside information.
-3. Do not invent examples or sources.
-4. Cite supporting passages using [S1], [S2], etc.
-5. If the evidence is insufficient, say so clearly.
-6. Do not cite a passage unless it supports the claim.
+1. Do not use outside knowledge.
+2. Cite supporting statements using labels such as [S1] and [S2].
+3. Only cite labels that appear in the supplied evidence.
+4. If the evidence does not answer the question, say so clearly.
+5. Do not invent documents, source labels, or facts.
+6. Return only the answer text, not JSON.
 
 Evidence:
 {chr(10).join(context)}
