@@ -60,12 +60,24 @@ def generate_response(prompt):
         response.raise_for_status()
         data = response.json()
 
-        answer = data.get("message", {}).get("content", "").strip()
+        answer = data.get("message", {}).get("content", "")
 
-        if not answer:
-            raise OllamaError("Ollama returned an empty answer.")
+        if not isinstance(answer, str) or not answer.strip():
+            raise OllamaError("The language model returned an empty response.")
 
-        return answer
+        return answer.strip()
 
-    except (requests.exceptions.RequestException, ValueError) as exc:
-        raise OllamaError(f"Chat request failed: {exc}") from exc
+    except requests.exceptions.Timeout as exc:
+        raise OllamaError(
+            "Ollama took too long to respond. Please try again."
+        ) from exc
+
+    except requests.exceptions.ConnectionError as exc:
+        raise OllamaError(
+            "Cannot connect to Ollama. Make sure Ollama is running."
+        ) from exc
+
+    except requests.exceptions.RequestException as exc:
+        raise OllamaError(
+            "The request to Ollama failed. Please try again."
+        ) from exc
