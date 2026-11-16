@@ -119,6 +119,17 @@ src/
 tests/
 ```
 
+## Application Screenshots
+
+### Main Interface
+![Main Interface](docs/screenshots/main-interface.png)
+
+### Retrieved Sources
+![Retrieved Sources](docs/screenshots/retrieved-sources.png)
+
+### Insufficient Evidence
+![Insufficient Evidence](docs/screenshots/insufficient-evidence.png)
+
 ## Limitations
 
 - The application is designed for a Python documentation knowledge base.
@@ -131,6 +142,14 @@ tests/
 ## Privacy and Cost
 
 The application uses locally hosted models through Ollama. It does not require paid model API credits. Questions and document processing are handled through the local application and Ollama setup.
+
+## Documentation
+
+- [System Architecture](docs/architecture.md)
+- [RAG Methodology](docs/methodology.md)
+- [Example Questions and Answers](docs/examples.md)
+- [Evaluation Results](docs/evaluation.md)
+- [Failure Cases and Limitations](docs/limitations.md)
 
 ## Author
 
